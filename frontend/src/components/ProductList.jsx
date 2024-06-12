@@ -19,15 +19,20 @@ const ProductList = ({productData}) => {
       let flag = true;
       console.log(product, User);
       const { cartProducts } = User;
-      let index =cartProducts && cartProducts.findIndex((el) => el.id === product.id);
-      if (index !== -1) {
-        alert("this product has already added");
-        flag = false;
-      }
-      if(flag){
-        dispatch(cartUpdate(User._id,product)).then((res)=>{
-          console.log(res);
-        })
+       if(User._id){
+        let index =cartProducts && cartProducts.findIndex((el) => el.id === product.id);
+        if (index !== -1) {
+          alert("this product has already added");
+          flag = false;
+        }
+        if(flag){
+          dispatch(cartUpdate(User._id,product)).then((res)=>{
+            console.log(res);
+          })
+       }
+     
+    }else{
+      alert('login first')
     };
   
     }
