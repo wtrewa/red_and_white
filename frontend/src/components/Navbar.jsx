@@ -1,9 +1,34 @@
 import addtocart from '../assets/icons8-add-to-cart-48.png'
 import usericon from "../assets/avatar-3.jpg"
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useRef, useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { getProduct, getProductSearch } from '../../Redux/Product/productAction'
 
  const Navbar = () => {
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [search, setSearch] = useState();
+  const dispatch = useDispatch();
+  const ref = useRef()
+
+  const user = useSelector((store) => store.authReducer.User);
+  console.log(user);
+  const btnRef = useRef();
+
+  
+   const paramsObj = {
+    params:{
+      q:search && search
+    }
+   }
+
+   const clickHandler = (e)=>{
+    console.log(paramsObj)
+    dispatch(getProductSearch(paramsObj));
+  }
+ 
+    
   return (
     <div className='header'>
       <div className='nav'>
@@ -16,8 +41,9 @@ import { Link } from 'react-router-dom'
         <div className="searchbar flex ">   <input
         type="text"
         placeholder="Search name movie or select options"
+        value={search} onChange={(e)=>setSearch(e.target.value)} 
       />
-      <button type="submit"  >
+      <button  onClick={clickHandler}  >
         <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
           <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
@@ -33,7 +59,7 @@ import { Link } from 'react-router-dom'
         </svg>
       </button></div>
         <div className="addtocart"><Link to={'/addtocart'}><img src={addtocart} alt="" />
-         <span className=' relative top-[-50px] left-10'>{1}</span>
+         <span className=' relative top-[-50px] left-10'>{user.cartProducts?.length || 0}</span>
         </Link> </div>
         <div className="userprofile"><img src={usericon}alt="" /></div>
       </div>
