@@ -12,7 +12,7 @@ export default function Home() {
   const productData = useSelector((store) => store.productReducer.products);
   console.log(productData);
   useEffect(() => {
-   getProduct(dispatch)
+   dispatch(getProduct(''))
   }, []);
   return (
     <div className=''>

@@ -19,6 +19,27 @@ productRoute.post('/add',async(req,res)=>{
 })
 
 
+productRoute.get('/products', async (req, res) => {
+    try {
+      const searchQuery = req.query.q;
+      console.log(searchQuery)
+      if (searchQuery) {
+        const products = await productModel.find({
+          $or: [
+            { title: { $regex: searchQuery, $options: 'i' } },
+            
+          ],
+        });
+        res.send({ products });
+      } else {
+        const products = await productModel.find();
+        res.send({ products });
+      }
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
 
 
 

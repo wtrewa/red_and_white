@@ -3,20 +3,20 @@ import { AUTH_FAILURE, AUTH_REQUEST, CART_PRODUCT_FAILURE, PATCH_CART_PRODUCT_SU
 import {getLocalStorageValue, setLocalStorageValue} from "../../localStorage"
 
    
-   export const  loginAction =(obj)=>async(dispatch)=>{
-          try {
-            dispatch({type:AUTH_REQUEST})
-             await axios.post(`http://localhost:8080/api/login`,obj).then((res)=>{
-                console.log(res)
-                console.log(res.data.token)
-                setLocalStorageValue('token',res.data.token)
-                dispatch({type:POST_AUTH_SUCCESS,payload:res.data.data})
-            })
-            
-          } catch (error) {
-            dispatch({type:AUTH_FAILURE})
-          }
-   }
+export const loginAction = (obj) => async (dispatch) => {
+  try {
+    dispatch({ type: AUTH_REQUEST });
+    const response = await axios.post(`http://localhost:8080/api/login`, obj);
+    console.log(response);
+    console.log(response.data.token);
+    setLocalStorageValue('token', response.data.token);
+    dispatch({ type: POST_AUTH_SUCCESS, payload: response.data.data });
+    return response; // Return the response to ensure the promise resolves
+  } catch (error) {
+    dispatch({ type: AUTH_FAILURE });
+    return Promise.reject(error); // Return the error to ensure the promise rejects
+  }
+};
 
  export const cartUpdate = (id,obj)=>async(dispatch)=>{
   try {
