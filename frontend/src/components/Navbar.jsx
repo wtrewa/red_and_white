@@ -3,7 +3,8 @@ import usericon from "../assets/avatar-3.jpg"
 import React, { useEffect, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { getProduct, getProductSearch } from '../../Redux/Product/productAction'
+import {getProductSearch} from "../Redux/Product/productAction"
+
 
  const Navbar = () => {
 

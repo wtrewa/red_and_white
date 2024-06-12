@@ -1,7 +1,9 @@
 const express = require("express");
+const auth = require('../middleware/auth')
 const bcrypt = require("bcrypt");
 const userModel = require("../model/userModel");
 const BlackList = require('../blacklist/blackList');
+const jwt = require('jsonwebtoken')
 const userRouter = express.Router();
 
 // register the user
@@ -11,9 +13,9 @@ userRouter.post("/signup", async (req, res) => {
     const newPassword = await bcrypt.hash(password, 10);
     console.log(newPassword);
     newUser = await userModel.create({
-      username,
-      email,
+      ...req.body,
       password: newPassword,
+      
     });
     res.send({ meassage: "You have registered successfully", data: newUser });
   } catch (error) {
@@ -22,23 +24,28 @@ userRouter.post("/signup", async (req, res) => {
 });
 userRouter.post("/login", async (req, res) => {
   try {
-    const { username, password } = req.body;
-    const user = await userModel.findOne({ username });
+    const { email, password } = req.body;
+    console.log(req.body)
+    const user = await userModel.findOne({ email });
+    console.log(user)
     if (!user) {
     res.send("Sign Up Frist");
+    return
     }
     const varify = await bcrypt.compare(password, user.password);
     if (!varify) {
     res.send("Wrong Password");
+    return 
     }
-    const token = jwt.sign(
-      { userId: user._id, username: user.username },
+    const token =  jwt.sign({ userId: user._id, username: user.email },
       "secret",
       { expiresIn: "1h" }
     );
+    console.log(token)
     res.send({
       msg: "Successfully Login",
       token: token,
+      data:user
     });
   } catch (error) {
     res.send(error);

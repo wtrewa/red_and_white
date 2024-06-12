@@ -1,4 +1,4 @@
-const let blackList = [];
+ let blackList = [];
 
 
 module.exports = blackList;
