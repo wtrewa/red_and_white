@@ -14,7 +14,7 @@ export const loginAction = (obj) => async (dispatch) => {
     return response; // Return the response to ensure the promise resolves
   } catch (error) {
     dispatch({ type: AUTH_FAILURE });
-    return Promise.reject(error); // Return the error to ensure the promise rejects
+    return error // Return the error to ensure the promise rejects
   }
 };
 
