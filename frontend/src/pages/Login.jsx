@@ -33,11 +33,12 @@ const Login = () => {
       return;
     }
     dispatch(loginAction(state)).then((res) => {
-      if (res.statusText === "OK") {
+      if (res.status === 200) {
         notify("Login Success !");
         setState(initState); // Clear form state on successful login
       } else {
         notifyError("Login Failed !");
+        return 
       }
     });
   };

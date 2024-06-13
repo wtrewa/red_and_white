@@ -25,30 +25,35 @@ userRouter.post("/signup", async (req, res) => {
 userRouter.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log(req.body)
+    console.log(req.body);
+
     const user = await userModel.findOne({ email });
-    console.log(user)
+    console.log(user);
+
     if (!user) {
-    res.send("Sign Up Frist");
-    return
+      return res.status(404).send("User not found. Please sign up first.");
     }
-    const varify = await bcrypt.compare(password, user.password);
-    if (!varify) {
-    res.send("Wrong Password");
-    return 
+
+    const verify = await bcrypt.compare(password, user.password);
+    if (!verify) {
+      return res.status(401).send("Wrong Password.");
     }
-    const token =  jwt.sign({ userId: user._id, username: user.email },
+
+    const token = jwt.sign(
+      { userId: user._id, username: user.email },
       "secret",
       { expiresIn: "1h" }
     );
-    console.log(token)
-    res.send({
-      msg: "Successfully Login",
+    console.log(token);
+
+    return res.status(200).json({
+      msg: "Successfully logged in",
       token: token,
-      data:user
+      data: user
     });
   } catch (error) {
-    res.send(error);
+    console.error(error);
+    return res.status(500).json({ msg: "Internal server error", error: error.message });
   }
 });
 
