@@ -10,7 +10,7 @@ const productRoute = express.Router();
 
 productRoute.post('/add',async(req,res)=>{
     try {
-        const product = await productModel.create({...req.body,creator:req.userId,name:req.username})
+        const product = await productModel.create({...req.body})
         // await product.populate('creator')
         res.send({msg:"Successfully added",product:product})   
     } catch (error) {
